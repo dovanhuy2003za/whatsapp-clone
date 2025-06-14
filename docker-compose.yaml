@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_USER: username
       POSTGRES_PASSWORD: password
-      PGDATA: /var/lib/postgresql/data
+      PGDATA: /data/postgres
       POSTGRES_DB: whatsapp_clone
     volumes:
       - postgres:/data/postgres
