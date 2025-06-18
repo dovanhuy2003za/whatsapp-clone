@@ -3,10 +3,10 @@ services:
     container_name: postgres-sql-wac
     image: postgres
     environment:
-      POSTGRES_USER: username
-      POSTGRES_PASSWORD: password
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       PGDATA: /data/postgres
-      POSTGRES_DB: whatsapp_clone
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - postgres:/data/postgres
     ports:
@@ -20,18 +20,43 @@ services:
     ports:
       - 9090:8080
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     networks:
       - whatsapp-clone
     command:
       - "start-dev"
     volumes:
       - keycloak:/opt/keycloak/data
+    depends_on:
+      - postgres
+  backend:
+    build: ./whatsappclone
+    container_name: backend-wac
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_URL: http://keycloak:8080
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+      - keycloak
+    networks:
+      - whatsapp-clone
+  frontend:
+    build: ./whatsapp-clone-ui
+    container_name: frontend-wac
+    ports:
+      - 4200:4200
+    depends_on:
+      - backend
+    networks:
+      - whatsapp-clone
 networks:
   whatsapp-clone:
     driver: bridge
-
 volumes:
   postgres:
     driver: local

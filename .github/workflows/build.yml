@@ -1,0 +1,26 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  build-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image
+        run: docker build -t backend-wac ./whatsappclone
+
+      - name: Build frontend image
+        run: docker build -t frontend-wac ./whatsapp-clone-ui
+
+      - name: Compose up
+        run: docker compose up --build -d
