@@ -2,9 +2,9 @@
 FROM node:20-alpine AS build
 WORKDIR /app
 COPY package*.json ./
-RUN npm install
+RUN npm ci
 COPY . .
-RUN npm run build -- --output-path=dist
+RUN npm install @stomp/stompjs && npm run build -- --output-path=dist
 
 # Stage 2: Serve with nginx
 FROM nginx:alpine
