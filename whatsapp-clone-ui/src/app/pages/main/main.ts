@@ -4,7 +4,7 @@ import { ChatResponse } from '../../services/models/chat-response';
 import { DatePipe } from '@angular/common';
 import { MessageService } from '../../services/services/message.service';
 import { MessageResponse } from '../../services/models/message-response';
-import * as Stomp from '@stomp/stompjs';
+import * as Stomp from 'stompjs';
 import SockJS from 'sockjs-client';
 import { FormsModule } from '@angular/forms';
 import { MessageRequest } from '../../services/models/message-request';
